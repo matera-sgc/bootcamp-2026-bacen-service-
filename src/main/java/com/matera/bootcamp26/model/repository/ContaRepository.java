@@ -7,10 +7,16 @@ import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicLong;
 
 @Component
 public class ContaRepository {
+
+    private final Map<Long, Conta> storage = new HashMap<>();
+    private final AtomicLong idSequence = new AtomicLong(1);
 
     public Conta getConta(Long id) {
         Conta conta = new Conta();
@@ -33,6 +39,13 @@ public class ContaRepository {
         }
 
         return contas;
+    }
+
+    public Conta salvarConta(Conta conta) {
+        Long id = idSequence.getAndIncrement();
+        conta.setId(id);
+        storage.put(id, conta);
+        return conta;
     }
 
 }
