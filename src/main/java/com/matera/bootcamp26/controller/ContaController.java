@@ -4,6 +4,7 @@ import com.matera.bootcamp26.model.dto.ContaDTO;
 import com.matera.bootcamp26.model.service.ContaService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -40,6 +41,12 @@ public class ContaController {
     public ResponseEntity<ContaDTO> criarConta(@RequestBody ContaDTO contaDTO) {
         ContaDTO criada = contaService.criarConta(contaDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(criada);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletarConta(@PathVariable("id") Long id) {
+        contaService.deletarConta(id);
+        return ResponseEntity.noContent().build();
     }
 
 }

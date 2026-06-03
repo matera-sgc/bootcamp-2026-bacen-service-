@@ -3,6 +3,8 @@ package com.matera.bootcamp26.model.service;
 import com.matera.bootcamp26.exception.ContaException;
 import com.matera.bootcamp26.model.dto.ContaDTO;
 import com.matera.bootcamp26.model.entity.Conta;
+import com.matera.bootcamp26.model.entity.StatusConta;
+import com.matera.bootcamp26.model.entity.TipoConta;
 import com.matera.bootcamp26.model.repository.ContaRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -20,12 +22,12 @@ public class ContaService {
     }
 
     public ContaDTO getConta(Long id) {
-        Conta conta = contaRepository.getConta(id);
+        Conta conta = contaRepository.findById(id).get();
         return entityToDTO(conta);
     }
 
     public List<ContaDTO> getContas() {
-        List<Conta> contas = contaRepository.getContas();
+        List<Conta> contas = contaRepository.findAll();
 
         return contas.stream()
                 .map((conta) -> entityToDTO(conta))
@@ -34,19 +36,29 @@ public class ContaService {
 
     public ContaDTO criarConta(ContaDTO dto) {
         Conta conta = dtoToEntity(dto);
+        conta.setStatusConta(StatusConta.ABERTA);
+        conta.setTipoConta(TipoConta.CORRENTE);
         if (dto.getAbertura() != null && dto.getAbertura().isAfter(LocalDate.now())) {
             throw new ContaException("Data de abertura não pode ser futura", HttpStatus.BAD_REQUEST);
         }
-        Conta salva = contaRepository.salvarConta(conta);
+        Conta salva = contaRepository.save(conta);
         return entityToDTO(salva);
+    }
+
+    public void deletarConta(Long id) {
+        Conta conta = contaRepository.findById(id).get();
+        contaRepository.delete(conta);
     }
 
     private ContaDTO entityToDTO(Conta conta) {
         return new ContaDTO(
+            conta.getId(),
             conta.getNome(),
             conta.getNumConta(),
             conta.getSaldo(),
-            conta.getAbertura()
+            conta.getAbertura(),
+            conta.getStatusConta().name(),
+            conta.getTipoConta().name()
         );
     }
 

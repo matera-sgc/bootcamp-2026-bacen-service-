@@ -5,16 +5,22 @@ import java.time.LocalDate;
 
 public class ContaDTO {
 
+    private Long id;
     private String nome;
     private Integer conta;
     private BigDecimal saldo;
     private LocalDate abertura;
+    private String statusConta;
+    private String tipoConta;
 
-    public ContaDTO(String nome, Integer conta, BigDecimal saldo, LocalDate abertura) {
+    public ContaDTO(Long id, String nome, Integer conta, BigDecimal saldo, LocalDate abertura, String statusConta, String tipoConta) {
+        this.id = id;
         this.nome = nome;
         this.conta = conta;
         this.saldo = saldo;
         this.abertura = abertura;
+        this.statusConta = statusConta;
+        this.tipoConta = tipoConta;
     }
 
     public String getNome() {
@@ -47,6 +53,30 @@ public class ContaDTO {
 
     public void setAbertura(LocalDate abertura) {
         this.abertura = abertura;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getStatusConta() {
+        return statusConta;
+    }
+
+    public void setStatusConta(String statusConta) {
+        this.statusConta = statusConta;
+    }
+
+    public String getTipoConta() {
+        return tipoConta;
+    }
+
+    public void setTipoConta(String tipoConta) {
+        this.tipoConta = tipoConta;
     }
 
     @Override
