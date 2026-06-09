@@ -7,10 +7,13 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Table(name = "CONTA")
@@ -39,7 +42,11 @@ public class Conta {
     @Column(name = "STATUS_CONTA", nullable = false)
     private StatusConta statusConta;
 
-    public Conta(Long id, String nome, Integer numConta, BigDecimal saldo, LocalDate abertura, TipoConta tipoConta, StatusConta statusConta) {
+    @OneToMany(mappedBy = "origemConta")
+    private List<Pagamento> pagamentos;
+
+
+    public Conta(Long id, String nome, Integer numConta, BigDecimal saldo, LocalDate abertura, TipoConta tipoConta, StatusConta statusConta, List<Pagamento> pagamentos) {
         this.id = id;
         this.nome = nome;
         this.numConta = numConta;
@@ -47,10 +54,19 @@ public class Conta {
         this.abertura = abertura;
         this.tipoConta = tipoConta;
         this.statusConta = statusConta;
+        this.pagamentos = pagamentos;
     }
 
     public Conta() {
 
+    }
+
+    public List<Pagamento> getPagamentos() {
+        return pagamentos;
+    }
+
+    public void setPagamentos(List<Pagamento> pagamentos) {
+        this.pagamentos = pagamentos;
     }
 
     public Long getId() {
@@ -86,7 +102,14 @@ public class Conta {
     }
 
     public void credito(BigDecimal valor) {
-        this.saldo.add(valor);
+        this.saldo = this.saldo.add(valor);
+    }
+
+    public void debito(BigDecimal valor) {
+        if (this.saldo.compareTo(valor) < 0) {
+            throw new IllegalArgumentException("Saldo insuficiente para débito");
+        }
+        this.saldo = this.saldo.subtract(valor);
     }
 
     public LocalDate getAbertura() {
