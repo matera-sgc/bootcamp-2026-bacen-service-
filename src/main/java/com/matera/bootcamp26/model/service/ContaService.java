@@ -22,7 +22,7 @@ public class ContaService {
     }
 
     public ContaDTO getConta(Long id) {
-        Conta conta = contaRepository.findById(id).get();
+        Conta conta = contaRepository.findById(id).orElseThrow(() -> new ContaException("Conta não encontrada", HttpStatus.BAD_REQUEST));
         return entityToDTO(conta);
     }
 

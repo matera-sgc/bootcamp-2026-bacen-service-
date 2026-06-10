@@ -1,5 +1,6 @@
 package com.matera.bootcamp26.model.entity;
 
+import com.matera.bootcamp26.exception.ContaException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -9,6 +10,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import lombok.Builder;
 import lombok.Setter;
 
 import java.math.BigDecimal;
@@ -17,6 +19,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "CONTA")
+@Builder
 public class Conta {
 
     @Id
@@ -102,6 +105,9 @@ public class Conta {
     }
 
     public void credito(BigDecimal valor) {
+        if (valor.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException("Nao é permitido crédito de valor negativo ou zero");
+        }
         this.saldo = this.saldo.add(valor);
     }
 
